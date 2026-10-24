@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sujud Tanda Ketaatan Kepada Allah SWT - Gim Edukasi PAI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas for generating certificate image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .font-game {
+            font-family: 'Fredoka', cursive;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-bounce {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-bounce:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6)); }
+            50% { filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.8)); }
+        }
+        .animate-glow {
+            animation: pulse-glow 3s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between p-3 sm:p-6">
+
+    <!-- Header / Navbar -->
+    <header class="max-w-4xl mx-auto w-full flex justify-between items-center bg-slate-800/80 p-4 rounded-2xl border border-slate-700 shadow-lg mb-4">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 p-2 sm:p-3 rounded-xl text-yellow-300">
+                <i class="fa-solid fa-mosque text-xl sm:text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-game text-lg sm:text-xl text-yellow-400 font-bold tracking-wide">PAI Kelas 7 SMP</h1>
+                <p class="text-xs sm:text-sm text-slate-300">Sujud Tanda Ketaatan Kepada Allah SWT</p>
+            </div>
+        </div>
+        <div id="stats-bar" class="hidden flex items-center space-x-4">
+            <div class="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-amber-500/30 flex items-center space-x-2">
+                <i class="fa-solid fa-star text-amber-400 text-sm sm:text-base"></i>
+                <span id="score-display" class="font-bold text-amber-400 text-sm sm:text-base">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center items-center relative">
+
+        <!-- 1. IDENTITAS & PETUNJUK AWAL -->
+        <div id="screen-welcome" class="w-full glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-6">
+            <div class="inline-block p-4 bg-indigo-500/20 rounded-full animate-glow mb-2">
+                <i class="fa-solid fa-kaaba text-5xl sm:text-6xl text-amber-400"></i>
+            </div>
+            
+            <h2 class="font-game text-2xl sm:text-4xl text-white font-bold leading-tight">
+                Jelajah Sujud: <span class="text-amber-400">Bukti Ketaatan Hamba</span>
+            </h2>
+
+            <!-- Petunjuk Singkat & Ringkas -->
+            <div class="bg-slate-900/60 p-4 sm:p-6 rounded-2xl text-left border border-slate-700 space-y-3">
+                <h3 class="font-bold text-amber-400 flex items-center gap-2 text-base sm:text-lg">
+                    <i class="fa-solid fa-circle-info"></i> Petunjuk Mengerjakan Gim:
+                </h3>
+                <ul class="text-xs sm:text-sm text-slate-300 space-y-2 list-disc list-inside leading-relaxed">
+                    <li>Isi nama lengkap dan kelas kamu dengan benar.</li>
+                    <li>Selesaikan <strong class="text-white">3 Level Tantangan</strong> (Sujud Syukur, Sujud Sahwi, dan Sujud Tilawah).</li>
+                    <li>Pilih jawaban yang paling tepat. Skor bertambah setiap kali menjawab benar!</li>
+                    <li>Gunakan kemampuan analisis dan hafalan bacaan sujudmu untuk meraih skor maksimal (100).</li>
+                    <li>Di akhir permainan, unduh <strong class="text-amber-400">Sertifikat Digital</strong> sebagai bukti prestasimu.</li>
+                </ul>
+            </div>
+
+            <!-- Form Data Siswa -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap Siswa:</label>
+                    <input type="text" id="input-name" placeholder="Masukkan nama kamu..." class="w-full bg-slate-900/90 border border-slate-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Kelas:</label>
+                    <input type="text" id="input-class" placeholder="Contoh: 7-A / 7-B" class="w-full bg-slate-900/90 border border-slate-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="btn-bounce w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 font-game text-xl text-white font-bold rounded-2xl shadow-lg hover:from-emerald-600 hover:to-teal-700 flex items-center justify-center gap-3 mx-auto">
+                <i class="fa-solid fa-play"></i> Mulai Petualangan!
+            </button>
+        </div>
+
+        <!-- 2. GAMEPLAY / SOAL GAME -->
+        <div id="screen-game" class="hidden w-full glass-card rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6">
+            
+            <!-- Progress & Level Info -->
+            <div class="flex flex-wrap justify-between items-center gap-2 pb-4 border-b border-slate-700">
+                <div>
+                    <span id="level-badge" class="px-3 py-1 bg-indigo-500/30 text-indigo-300 border border-indigo-500/50 rounded-full text-xs font-semibold uppercase tracking-wider">
+                        Level 1: Sujud Syukur
+                    </span>
+                    <h3 id="question-number" class="font-game text-lg sm:text-xl text-white font-bold mt-1">Soal 1/10</h3>
+                </div>
+                <div class="w-full sm:w-48 bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-700">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Kartu Pertanyaan -->
+            <div class="bg-slate-900/80 p-5 sm:p-6 rounded-2xl border border-slate-700 shadow-inner">
+                <p id="question-text" class="text-base sm:text-lg text-slate-100 font-medium leading-relaxed">
+                    Loading soal...
+                </p>
+                <!-- Area tambahan jika ada ilustrasi/potongan ayat/studi kasus -->
+                <div id="question-context" class="hidden mt-3 p-3 bg-indigo-950/50 rounded-xl border border-indigo-800/50 text-xs sm:text-sm text-indigo-200 italic">
+                </div>
+            </div>
+
+            <!-- Pilihan Jawaban -->
+            <div id="options-container" class="grid grid-cols-1 gap-3">
+                <!-- Tombol opsi dimuat dinamis -->
+            </div>
+
+            <!-- Umpan Balik & Motivasi (Feedback Area) -->
+            <div id="feedback-box" class="hidden p-4 rounded-2xl border transition-all duration-300 flex items-start gap-3">
+                <div id="feedback-icon" class="text-2xl mt-0.5"></div>
+                <div>
+                    <h4 id="feedback-title" class="font-bold text-sm sm:text-base"></h4>
+                    <p id="feedback-msg" class="text-xs sm:text-sm mt-1"></p>
+                    <p id="motivation-msg" class="text-xs italic text-slate-300 mt-2 border-t border-slate-700/50 pt-2"></p>
+                </div>
+            </div>
+
+            <!-- Tombol Lanjut -->
+            <div class="flex justify-end pt-2">
+                <button id="next-btn" onclick="nextQuestion()" disabled class="px-6 py-3 bg-slate-700 text-slate-400 font-bold rounded-xl cursor-not-allowed flex items-center gap-2 transition">
+                    Lanjut <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. HASIL AKHIR & SERTIFIKAT -->
+        <div id="screen-result" class="hidden w-full glass-card rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+            <div class="inline-block p-4 bg-emerald-500/20 rounded-full animate-bounce">
+                <i class="fa-solid fa-trophy text-5xl text-amber-400"></i>
+            </div>
+
+            <div>
+                <h2 class="font-game text-2xl sm:text-3xl text-white font-bold">Selamat! Kamu Telah Menyelesaikan Gim</h2>
+                <p id="result-subtitle" class="text-sm text-slate-300 mt-1">Kamu telah membuktikan pemahamanmu tentang Sujud Tanda Ketaatan!</p>
+            </div>
+
+            <!-- Stats Ringkasan -->
+            <div class="grid grid-cols-3 gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-700">
+                <div>
+                    <p class="text-xs text-slate-400">Total Soal</p>
+                    <p id="summary-total" class="font-bold text-lg text-white">10</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400">Benar</p>
+                    <p id="summary-correct" class="font-bold text-lg text-emerald-400">0</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400">Skor Akhir</p>
+                    <p id="summary-score" class="font-bold text-lg text-amber-400">0</p>
+                </div>
+            </div>
+
+            <!-- AREA PRATINJAU SERTIFIKAT DIGITAL -->
+            <div class="overflow-x-auto p-2 bg-slate-900 rounded-2xl border border-slate-700">
+                <div id="certificate-template" class="w-[700px] h-[480px] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-8 border-amber-400/80 p-8 text-center flex flex-col justify-between mx-auto relative text-slate-100 shadow-2xl">
+                    <!-- Frame Pattern Decorative Lines -->
+                    <div class="absolute inset-2 border-2 border-dashed border-amber-300/40 pointer-events-none"></div>
+
+                    <!-- Header Sertifikat -->
+                    <div class="space-y-1">
+                        <div class="flex justify-center items-center gap-2 text-amber-400">
+                            <i class="fa-solid fa-award text-3xl"></i>
+                            <span class="font-game text-2xl font-bold tracking-widest uppercase">SERTIFIKAT PENGHARGAAN</span>
+                            <i class="fa-solid fa-award text-3xl"></i>
+                        </div>
+                        <p class="text-xs text-slate-300 tracking-wide uppercase">Gim Edukasi PAI Kelas 7 SMP - Sujud Tanda Ketaatan</p>
+                    </div>
+
+                    <!-- Body Sertifikat -->
+                    <div class="space-y-3 my-auto">
+                        <p class="text-xs text-slate-300 italic">Diberikan secara terhormat kepada:</p>
+                        <h3 id="cert-name" class="font-game text-3xl text-amber-300 font-bold underline decoration-amber-500/50">NAMA SISWA</h3>
+                        <p class="text-xs text-slate-300">Kelas: <span id="cert-class" class="font-bold text-white">7-A</span></p>
+                        <p class="text-xs text-slate-200 max-w-lg mx-auto leading-relaxed mt-2">
+                            Telah berhasil menyelesaikan seluruh tantangan permainan edukasi interaktif materi 
+                            <strong class="text-amber-300">Sujud Syukur, Sujud Sahwi, dan Sujud Tilawah</strong> 
+                            dengan meraih predikat kelulusan sangat baik.
+                        </p>
+                    </div>
+
+                    <!-- Footer Sertifikat -->
+                    <div class="flex justify-between items-end border-t border-slate-700/80 pt-4">
+                        <div class="text-left space-y-1">
+                            <p class="text-[10px] text-slate-400">Skor Akhir PAI:</p>
+                            <p id="cert-score" class="font-game text-2xl text-emerald-400 font-bold">100 / 100</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 mx-auto mb-1 flex items-center justify-center bg-amber-500/10 rounded-full border border-amber-400/30">
+                                <i class="fa-solid fa-certificate text-3xl text-amber-400"></i>
+                            </div>
+                            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Verifikasi Edukasi PAI</p>
+                        </div>
+                        <div class="text-right space-y-1">
+                            <p class="text-[10px] text-slate-400">Tanggal Penyelesaian:</p>
+                            <p id="cert-date" class="text-xs font-semibold text-slate-200">24 Oktober 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="downloadCertificate()" class="btn-bounce px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl flex items-center gap-2 shadow-lg">
+                    <i class="fa-solid fa-download"></i> Unduh Sertifikat (PNG)
+                </button>
+                <button onclick="restartGame()" class="btn-bounce px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Main Lagi
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl mx-auto w-full text-center py-4 text-xs text-slate-500 mt-6">
+        &copy; Gim Edukasi PAI Kelas 7 SMP - Kurikulum Merdeka. Pembelajaran Berbasis Permainan (HOTS).
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // Data Pertanyaan (Integrasi HOTS & 3 Jenis Sujud)
+        const questionsData = [
+            // LEVEL 1: SUJUD SYUKUR
+            {
+                level: "Level 1: Sujud Syukur",
+                question: "Rian baru saja mendapat kabar bahwa ia berhasil menjuarai Lomba Pidato PAI tingkat Kabupaten. Secara refleks, ia langsung bersujud di tempat tanpa berwudu terlebih dahulu sebagai bentuk rasa gembira dan terima kasihnya kepada Allah SWT. Bagaimana analisis hukum dan keabsahan tindakan Rian?",
+                context: "Studi Kasus: Ekspresi rasa syukur atas nikmat mendadak.",
+                options: [
+                    "Sujudnya tidak sah karena sujud syukur wajib dalam keadaan suci/wudu dan menghadap kiblat.",
+                    "Sujudnya tetap sah dan berpahala karena sujud syukur sunnah dilakukan kapan saja saat mendapat nikmat mendadak.",
+                    "Sujudnya haram karena tidak dilakukan di dalam rangkaian salat fardu.",
+                    "Sujudnya diganti dengan membaca tasbih 100 kali tanpa perlu bersujud."
+                ],
+                correct: 1, // Catatan: Menurut sebagian ulama (seperti Ibn Taimiyah/Syaukani) sujud syukur boleh tanpa wudu jika mendadak, atau menurut Syafi'i disukai bersuci. Di konteks SMP disesuaikan pemahaman umum sunnah.
+                explanation: "Sujud syukur dilakukan saat menerima nikmat mendadak atau terhindar dari musibah. Menurut pendapat yang kuat, sujud syukur boleh dilakukan secara langsung sebagai bentuk spontanitas atas nikmat Allah.",
+                motivation: "Hebat! Rasa syukur adalah kunci bertambahnya nikmat dari Allah SWT."
+            },
+            {
+                level: "Level 1: Sujud Syukur",
+                question: "Manakah di antara sebab-sebab berikut yang PALING TEPAT untuk disyariatkannya melakukan Sujud Syukur?",
+                context: null,
+                options: [
+                    "Lupa rakaat saat melaksanakan salat Dzuhur.",
+                    "Mendengar ayat sajdah dibacakan oleh imam.",
+                    "Mendapat kabar gembira lulus ujian sekolah dengan nilai memuaskan.",
+                    "Ragu-ragu apakah sudah membaca doa qunut atau belum."
+                ],
+                correct: 2,
+                explanation: "Sujud syukur disyariatkan ketika seseorang memperoleh nikmat yang besar atau terhindar dari marabahaya/musibah.",
+                motivation: "Luar biasa! Terus tingkatkan rasa syukurmu dalam kehidupan sehari-hari."
+            },
+            {
+                level: "Level 1: Sujud Syukur",
+                question: "Bagaimanakah lafal bacaan yang dibaca ketika seseorang melaksanakan Sujud Syukur?",
+                context: "Sebab & Bacaan Sujud",
+                options: [
+                    "Subhana rabbiyal a'la wa bihamdih",
+                    "Sajada wajhiya lilladzi khalaqahu wa shawwarahu...",
+                    "Subhana man la yanamu wa la yashu",
+                    "Subhanallahi walhamdulillahi wala ilaaha illallahu wallahu akbar"
+                ],
+                correct: 1,
+                explanation: "Bacaan sujud syukur: 'Sajada wajhiya lilladzi khalaqahu wa shawwarahu wa syaqqa sam'ahu wa basharahu bihaulihi wa quwwatihi'.",
+                motivation: "Cerdas! Kamu menguasai hafalan bacaan sujud dengan sangat baik!"
+            },
+
+            // LEVEL 2: SUJUD SAHWI
+            {
+                level: "Level 2: Sujud Sahwi",
+                question: "Ahmad sedang melaksanakan salat Asar. Pada rakaat ketiga, ia ragu apakah ia baru mengerjakan 2 rakaat atau sudah 3 rakaat. Berdasarkan prinsip fiqih salat, tindakan HOTS apakah yang paling tepat dilakukan Ahmad?",
+                context: "Studi Kasus: Keraguan dalam jumlah rakaat salat.",
+                options: [
+                    "Membatalkan salat dan mengulangnya dari awal.",
+                    "Meyakini jumlah rakaat yang terbanyak (3 rakaat) lalu langsung salam.",
+                    "Meyakini jumlah yang paling sedikit (2 rakaat), menambah rakaat yang kurang, lalu Sujud Sahwi sebelum salam.",
+                    "Bertanya kepada makmum di sebelah sambil tetap salat."
+                ],
+                correct: 2,
+                explanation: "Jika ragu rakaat, ambil yang yakin (jumlah paling sedikit), selesaikan sisa rakaat, lalu lakukan sujud sahwi dua kali sebelum salam.",
+                motivation: "Mantap! Kamu mampu menyelesaikan masalah keraguan dalam ibadah dengan tepat."
+            },
+            {
+                level: "Level 2: Sujud Sahwi",
+                question: "Sujud Sahwi dilakukan sebanyak dua kali sujud. Kapan waktu pelaksanaan Sujud Sahwi yang utama sesuai sunnah Rasulullah SAW?",
+                context: "Tata Cara Salat",
+                options: [
+                    "Setelah salam pertama saja.",
+                    "Sebelum salam (setelah tahiyyat akhir) atau sesudah salam jika ada kelebihan rakaat.",
+                    "Di tengah-tengah iktidal.",
+                    "Boleh dilakukan kapan saja dalam kurun waktu 24 jam."
+                ],
+                correct: 1,
+                explanation: "Sujud sahwi dilakukan sebelum salam (setelah bacaan tasyahud akhir) atau setelah salam tergantung kondisi kelupaan dalam salat.",
+                motivation: "Luar biasa! Pemahaman fiqih salatmu semakin matang."
+            },
+            {
+                level: "Level 2: Sujud Sahwi",
+                question: "Apa arti dari kata 'Sahwi' secara bahasa yang menjadi alasan dinamakannya sujud ini?",
+                context: "Konsep Bahasa & Istilah",
+                options: [
+                    "Terima kasih / Syukur",
+                    "Lupa atau Lalai",
+                    "Membaca ayat Al-Qur'an",
+                    "Penyesalan atas dosa"
+                ],
+                correct: 1,
+                explanation: "Sahwi artinya lupa atau lalai. Sujud sahwi adalah sujud yang dilakukan karena lupa/ragu dalam salat.",
+                motivation: "Bagus sekali! Mengetahui makna bahasa memperkuat pemahamanmu."
+            },
+
+            // LEVEL 3: SUJUD TILAWAH
+            {
+                level: "Level 3: Sujud Tilawah",
+                question: "Ketika Bu Guru membaca Al-Qur'an surah Al-Alaq ayat 19 (ayat sajdah) di depan kelas, terdapat simbol khusus (۩) di akhir ayat. Tindakan apa yang disunnahkan bagi siswa yang mendengarkannya?",
+                context: "Studi Kasus: Membaca & Mendengar Ayat Sajdah.",
+                options: [
+                    "Berdiri dan membaca takbir tiga kali.",
+                    "Langsung melakukan Sujud Tilawah sebanyak satu kali.",
+                    "Melakukan sujud dua kali seperti sujud dalam salat fardu.",
+                    "Melakukan sujud sahwi setelah selesai membaca Al-Qur'an."
+                ],
+                correct: 1,
+                explanation: "Disunnahkan melakukan Sujud Tilawah satu kali ketika membaca atau mendengar bacaan ayat sajdah.",
+                motivation: "Keren! Meneladani sunnah saat mendengar Al-Qur'an adalah tanda ketakwaan."
+            },
+            {
+                level: "Level 3: Sujud Tilawah",
+                question: "Manakah di bawah ini yang MERUPAKAN salah satu surah yang memuat ayat Sajdah dalam Al-Qur'an?",
+                context: "Pengetahuan Al-Qur'an",
+                options: [
+                    "Surah Al-Ikhlas",
+                    "Surah An-Nas",
+                    "Surah As-Sajdah",
+                    "Surah Al-Kawtsar"
+                ],
+                correct: 2,
+                explanation: "Surah As-Sajdah, Al-A'raf ayat 206, Al-Alaq ayat 19, dan beberapa surah lainnya mengandung ayat sajdah.",
+                motivation: "Tepat sekali! Memahami tanda ayat sajdah memperlancar ibadahmu."
+            },
+            {
+                level: "Level 3: Sujud Tilawah",
+                question: "Mengapa iblis sangat membenci dan menangis ketika melihat seorang anak cucu Adam (manusia) melakukan Sujud Tilawah?",
+                context: "Refleksi Hikmah Sujud",
+                options: [
+                    "Karena manusia diperintah sujud dan mereka taat, sedangkan iblis dulu enggan bersujud saat diperintah Allah.",
+                    "Karena manusia mendapatkan hadiah harta benda di dunia.",
+                    "Karena waktu iblis untuk menggoda manusia telah habis.",
+                    "Karena sujud tilawah memerlukan waktu yang sangat lama."
+                ],
+                correct: 0,
+                explanation: "Dalam hadits disebutkan iblis menangis karena manusia taat bersujud saat diperintah, sedangkan ia durhaka ketika diperintah bersujud kepada Nabi Adam AS.",
+                motivation: "MasyaAllah! Hikmah mendalam ini makin memperkuat keimananmu!"
+            },
+            {
+                level: "Level 3: Sujud Tilawah & Evaluasi",
+                question: "Di antara Hikmah utama membiasakan ketiga jenis sujud (Syukur, Sahwi, Tilawah) dalam kehidupan seorang muslim adalah...",
+                context: "Integrasi Nilai & Karakter Karakter Muslim",
+                options: [
+                    "Agar dipuji oleh teman dan guru sebagai hamba yang taat.",
+                    "Menghindarkan diri dari sifat sombong dan memperkuat rasa kerendahan hati di hadapan Allah SWT.",
+                    "Mendapatkan sertifikat dan nilai tertinggi di sekolah saja.",
+                    "Menghilangkan kewajiban melaksanakan salat lima waktu."
+                ],
+                correct: 1,
+                explanation: "Hakikat sujud adalah lambang kepasrahan, keharmonisan ruhani, dan pengikisan sifat sombong/takabur dalam diri manusia.",
+                motivation: "Luar biasa! Kamu telah menyelesaikan seluruh rangkaian pembelajaran dengan sangat sempurna!"
+            }
+        ];
+
+        // State Gim
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let correctAnswersCount = 0;
+        let studentName = "";
+        let studentClass = "";
+        let selectedOption = null;
+
+        // Sound Synthesis (Web Audio API - Efek Suara Tanpa File Eksternal)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.3); // G5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(130.81, audioCtx.currentTime + 0.3); // C3
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.6);
+                }
+            } catch (e) {
+                console.log("Audio not supported or restricted", e);
+            }
+        }
+
+        // Mulai Game
+        function startGame() {
+            const nameInput = document.getElementById('input-name').value.trim();
+            const classInput = document.getElementById('input-class').value.trim();
+
+            if (!nameInput || !classInput) {
+                alert("Harap isi Nama Lengkap dan Kelas terlebih dahulu!");
+                return;
+            }
+
+            studentName = nameInput;
+            studentClass = classInput;
+
+            // Transisi Layar
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('stats-bar').classList.remove('hidden');
+
+            // Reset Variable
+            currentQuestionIndex = 0;
+            score = 0;
+            correctAnswersCount = 0;
+            updateScoreDisplay();
+
+            loadQuestion();
+        }
+
+        // Muat Soal
+        function loadQuestion() {
+            const q = questionsData[currentQuestionIndex];
+
+            // Reset UI State
+            selectedOption = null;
+            document.getElementById('feedback-box').classList.add('hidden');
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.className = "px-6 py-3 bg-slate-700 text-slate-400 font-bold rounded-xl cursor-not-allowed flex items-center gap-2 transition";
+
+            // Update Header & Progress
+            document.getElementById('level-badge').textContent = q.level;
+            document.getElementById('question-number').textContent = `Soal ${currentQuestionIndex + 1}/${questionsData.length}`;
+            
+            const progressPercent = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Text Soal
+            document.getElementById('question-text').textContent = q.question;
+            
+            const contextEl = document.getElementById('question-context');
+            if (q.context) {
+                contextEl.textContent = q.context;
+                contextEl.classList.remove('hidden');
+            } else {
+                contextEl.classList.add('hidden');
+            }
+
+            // Opsi Jawaban
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const optionLabels = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-slate-800/90 hover:bg-slate-700/80 border border-slate-700 text-slate-200 text-xs sm:text-sm font-medium transition flex items-center gap-3 group";
+                btn.onclick = () => selectAnswer(idx);
+                btn.id = `opt-btn-${idx}`;
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-600 flex items-center justify-center text-amber-400 font-bold group-hover:border-amber-400 transition shrink-0">${optionLabels[idx]}</span>
+                    <span class="flex-grow">${opt}</span>
+                `;
+
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Pilih Jawaban
+        function selectAnswer(index) {
+            if (selectedOption !== null) return; // Kunci agar tidak bisa ganti jawaban
+
+            selectedOption = index;
+            const q = questionsData[currentQuestionIndex];
+            const isCorrect = (index === q.correct);
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            const motivationMsg = document.getElementById('motivation-msg');
+
+            // Disable all option buttons
+            for (let i = 0; i < q.options.length; i++) {
+                const btn = document.getElementById(`opt-btn-${i}`);
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed');
+
+                if (i === q.correct) {
+                    btn.classList.remove('bg-slate-800/90', 'border-slate-700');
+                    btn.classList.add('bg-emerald-950/80', 'border-emerald-500', 'text-emerald-200');
+                } else if (i === index && !isCorrect) {
+                    btn.classList.remove('bg-slate-800/90', 'border-slate-700');
+                    btn.classList.add('bg-rose-950/80', 'border-rose-500', 'text-rose-200');
+                }
+            }
+
+            if (isCorrect) {
+                playSound('correct');
+                score += 10;
+                correctAnswersCount++;
+                updateScoreDisplay();
+
+                feedbackBox.className = "p-4 rounded-2xl border bg-emerald-950/60 border-emerald-500/50 text-emerald-200 flex items-start gap-3 animate-fade-in";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+                feedbackTitle.textContent = "Jawaban Tepat Sekali!";
+                feedbackTitle.className = "font-bold text-sm sm:text-base text-emerald-400";
+            } else {
+                playSound('wrong');
+                feedbackBox.className = "p-4 rounded-2xl border bg-rose-950/60 border-rose-500/50 text-rose-200 flex items-start gap-3 animate-fade-in";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i>`;
+                feedbackTitle.textContent = "Jawaban Kurang Tepat";
+                feedbackTitle.className = "font-bold text-sm sm:text-base text-rose-400";
+            }
+
+            feedbackMsg.textContent = q.explanation;
+            motivationMsg.textContent = `💡 Motivasi: ${q.motivation}`;
+            feedbackBox.classList.remove('hidden');
+
+            // Enable Next Button
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = false;
+            nextBtn.className = "btn-bounce px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl flex items-center gap-2 shadow-lg cursor-pointer";
+        }
+
+        // Lanjut ke Soal Berikutnya / Hasil
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questionsData.length) {
+                loadQuestion();
+            } else {
+                finishGame();
+            }
+        }
+
+        // Update Skor
+        function updateScoreDisplay() {
+            document.getElementById('score-display').textContent = score;
+        }
+
+        // Selesai Gim & Tampilkan Sertifikat
+        function finishGame() {
+            playSound('win');
+
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            // Fill Data Ringkasan
+            document.getElementById('summary-total').textContent = questionsData.length;
+            document.getElementById('summary-correct').textContent = correctAnswersCount;
+            document.getElementById('summary-score').textContent = score;
+
+            // Fill Certificate Data
+            document.getElementById('cert-name').textContent = studentName.toUpperCase();
+            document.getElementById('cert-class').textContent = studentClass.toUpperCase();
+            document.getElementById('cert-score').textContent = `${score} / 100`;
+
+            const today = new Date();
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('cert-date').textContent = today.toLocaleDateString('id-ID', dateOptions);
+        }
+
+        // Unduh Sertifikat sebagai Gambar PNG
+        function downloadCertificate() {
+            const certElement = document.getElementById('certificate-template');
+
+            // Opsi html2canvas untuk kualitas tinggi
+            html2canvas(certElement, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#0f172a'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Sertifikat_PAI_Sujud_${studentName.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Main Lagi
+        function restartGame() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-welcome').classList.remove('hidden');
+            document.getElementById('stats-bar').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
